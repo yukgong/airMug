@@ -1,23 +1,25 @@
-
 .scroll-section {
     position: relative;
-    padding-top : 40vh;
-    border : solid 1px red;
+    padding-top: 40vh;
+    border: solid 1px red;
 }
 
+
 /* section 0 */
-#scroll-section-0 h1{
+
+#scroll-section-0 h1 {
     font-size: 4rem;
     text-align: center;
 }
 
-.main-msg{
+.main-msg {
     display: flex;
+    top: 35vh;
     justify-content: center;
     align-items: center;
     height: 3em;
     font-size: 2.5rem;
-    margin: 0.5rem  0;
+    margin: 0.5rem 0;
     opacity: 0;
 }
 
@@ -27,46 +29,52 @@
     text-align: center;
 }
 
+
 /* section 1 */
-.discription{
+
+.discription {
     font-size: 1rem;
     color: var(--gray);
     padding: 0 1rem;
     max-width: 1000px;
-    margin : 0 auto;
+    margin: 0 auto;
 }
 
-.discription strong{
+.discription strong {
     float: left;
     margin-right: 0.2em;
     font-size: 3rem;
     color: var(--black);
 }
 
+
 /* section 2 */
+
 .main-msg small {
     display: block;
     margin-bottom: 0.5em;
     font-size: 1rem;
 }
 
-#scroll-section-2 .main-msg{
+#scroll-section-2 .main-msg {
     font-size: 3.5rem;
 }
 
-.desc-msg{
+.desc-msg {
     font-weight: bolder;
     width: 50%;
 }
 
-.pin{
+.pin {
     width: 1px;
     height: 100px;
     background-color: var(--black);
 }
 
+
 /* section 3 */
-.mid-msg{
+
+.mid-msg {
     max-width: 1000px;
     margin: 0 auto;
     padding: 0 1rem;
@@ -74,12 +82,12 @@
     color: var(--gray);
 }
 
-.mid-msg strong{
+.mid-msg strong {
     font-weight: bolder;
     color: var(--black);
 }
 
-.canvas-caption{
+.canvas-caption {
     max-width: 1000px;
     margin: 0 auto;
     color: var(--gray);
@@ -87,7 +95,7 @@
     font-size: 1rem;
 }
 
-.footer{
+.footer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -97,30 +105,28 @@
 }
 
 @media (min-width: 1024px) {
-    #scroll-section-0 h1{
+    #scroll-section-0 h1 {
         font-size: 9vw;
     }
-    .main-msg{
+    .main-msg {
         font-size: 4.5vw;
     }
-    .discription{
+    .discription {
         font-size: 1.5rem;
     }
-    .discription strong{
+    .discription strong {
         font-size: 5vw;
     }
     #scroll-section-2 .main-msg {
         font-size: 5vw;
     }
-
     .main-msg small {
         font-size: 1.5vw;
     }
-
     .desc-msg {
         width: 20%;
     }
-    .mid-msg{
+    .mid-msg {
         font-size: 4vw;
     }
     .canvas-caption {

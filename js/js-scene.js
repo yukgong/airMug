@@ -6,8 +6,7 @@ const body = document.querySelector('body');
     let currentScene = 0;
     let enterNewScene = false; // 새로운 씬이 시작되는 순간 true
 
-    const sceneInfo = [
-        {
+    const sceneInfo = [{
             // 0
             type: 'sticky',
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
@@ -20,14 +19,17 @@ const body = document.querySelector('body');
                 messageD: document.querySelector('#scroll-section-0 .main-msg.d')
             },
             values: {
-                messageA_opacity: [0, 1] // 메세지 요소의 투명도
-                // messageB_opacity: [0, 1],
-                // messageC_opacity: [0, 1],
-                // messageD_opacity: [0, 1]
+                // 메세지 요소의 투명도     //애니메이션이 시작되고 끝나는 구간 -> 씬의 전체 높이를 1로 봤을때, 해당 비율이라는 뜻.
+                messageA_opacity_fadeIn: [0, 1, { start: 0.1, end: 0.2 }],
+                messageA_opacity_fadeOut: [1, 0, { start: 0.25, end: 0.3 }],
+                messageA_translateY_fadeIn: [20, 0, { start: 0.1, end: 0.2 }],
+                messageA_translateY_fadeOut: [0, -20, { start: 0.25, end: 0.3 }],
+
+                messageB_opacity_fadeIn: [1, 0, { start: 0.3, end: 0.4 }]
 
             }
         },
-        {   // 1
+        { // 1
             type: 'nomal',
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0,
@@ -36,7 +38,7 @@ const body = document.querySelector('body');
             }
 
         },
-        {   // 2
+        { // 2
             type: 'sticky',
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0,
@@ -45,7 +47,7 @@ const body = document.querySelector('body');
             }
 
         },
-        {   // 3
+        { // 3
             type: 'sticky',
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0,
@@ -53,7 +55,8 @@ const body = document.querySelector('body');
                 container: document.querySelector('#scroll-section-3'),
             }
 
-        }];
+        }
+    ];
 
     // setLayout(); 
     function setLayout() {
@@ -84,8 +87,7 @@ const body = document.querySelector('body');
     }
 
 
-    // 0번째 씬 안에서 4개의 메세지가 스크롤 위치에 따라 나타나도록 하기 위해서는
-    // 현재 씬에서 얼만큼의 비율로 스크롤 되었는지를 알 수 있어야한다.
+    // 현재 씬에서 얼만큼의 비율로 스크롤 되었는지를 알 수 있도록 하는 함수
     // @ para = values : 각 씬의 values 객체를 가져옴
     // @ para = currentYoffset : 현재 씬에서 얼마나 스크롤 됐는지 나타내는 값.
     function calcValues(values, currentYoffset) {
@@ -93,14 +95,27 @@ const body = document.querySelector('body');
 
         // 현재 씬에서 스크롤된 범위를 비율로 구하기
         // 전체 높이를 1로 봤을 때 스크롤할때마다 비율은 0.1,0.2... 으로 계산된다.
-        let scrollRatio = currentYoffset / sceneInfo[currentScene].scrollHeight;
+        const scrollHeight = sceneInfo[currentScene].scrollHeight;
+        const scrollRatio = currentYoffset / scrollHeight;
 
-        // 범위를 비율로 계산했다면, 
-        // 각 씬의 values에 정의된 범위 안에서 비율이 계산되도록 계산한다.
-        // values의 두번째 값에서 첫번째 값을 빼면,
-        // ex) valuesp[0] = 200 / - values[1] = 700 -> 700 - 200 = 500 
-        //     500px 범위 안에서 비율 계산을 할 수 있음.
-        returnValue = scrollRatio * (values[1] - values[0]) + values[0];
+        if (values.length === 3) {
+            //start ~ end 사이에 애니메이션 실행
+            const partScrollStart = values[2].start * scrollHeight;
+            const partScrollEnd = values[2].end * scrollHeight;
+            const partScrollHeight = partScrollEnd - partScrollStart;
+
+            if (currentYoffset >= partScrollStart && currentYoffset <= partScrollEnd) {
+                returnValue = (currentYoffset - partScrollStart) / partScrollHeight * (values[1] - values[0]) + values[0]
+
+            } else if (currentYoffset < partScrollStart) {
+                returnValue = values[0];
+            } else if (currentYoffset > partScrollEnd) {
+                returnValue = values[1];
+            }
+        } else {
+            // 각 씬의 values에 정의된 범위 안에서 비율이 계산되도록 계산한다.
+            returnValue = scrollRatio * (values[1] - values[0]) + values[0];
+        }
 
         return returnValue;
     }
@@ -109,15 +124,27 @@ const body = document.querySelector('body');
         const objs = sceneInfo[currentScene].objs; // DOM 객체
         const values = sceneInfo[currentScene].values; // 값에 해당하는 요소
         const currentYoffset = yOffset - prevScrollHeight;
-
-        console.log(currentScene);
+        const scrollHeight = sceneInfo[currentScene].scrollHeight // 현재 씬의 scrollHeight
+        const scrollRatio = currentYoffset / scrollHeight; // 현재씬의 현재 스크롤 비율
 
         switch (currentScene) {
             case 0:
                 // console.log('1 play');
-                let messageA_opacity_fadeIn = calcValues(values.messageA_opacity, currentYoffset);
-                objs.messageA.style.opacity = messageA_opacity_fadeIn;
-                console.log(messageA_opacity_fadeIn);
+                const messageA_opacity_fadeIn = calcValues(values.messageA_opacity_fadeIn, currentYoffset);
+                const messageA_opacity_fadeOut = calcValues(values.messageA_opacity_fadeOut, currentYoffset);
+                const messageA_translateY_fadeIn = calcValues(values.messageA_translateY_fadeIn, currentYoffset);
+                const messageA_translateY_fadeOut = calcValues(values.messageA_translateY_fadeOut, currentYoffset);
+
+                if (scrollRatio <= 0.22) {
+                    //in
+                    objs.messageA.style.opacity = messageA_opacity_fadeIn;
+                    objs.messageA.style.transform = `translateY(${messageA_translateY_fadeIn}%)`;
+                } else {
+                    //out
+                    objs.messageA.style.opacity = messageA_opacity_fadeOut;
+                    objs.messageA.style.transform = `translateY(${messageA_translateY_fadeOut}%)`;
+                }
+
                 break;
 
             case 1:
@@ -170,7 +197,7 @@ const body = document.querySelector('body');
 
         // 스크롤 비율값에 음수가 나타나지 않도록 -> 오류 발생 위험을 방지하기 위해
         // 씬이 바뀌는 순간에는 애니메이션을 잠깐 멈춘다.
-        if(enterNewScene) return;
+        if (enterNewScene) return;
         playAnimation();
     }
 
@@ -184,4 +211,31 @@ const body = document.querySelector('body');
     window.addEventListener('resize', setLayout);
 })();
 
+function playAnimation() {
+    const objs = sceneInfo[currentScene].objs; // DOM 객체
+    const values = sceneInfo[currentScene].values; // 값에 해당하는 요소
+    const currentYoffset = yOffset - prevScrollHeight;
+    const scrollHeight = sceneInfo[currentScene].scrollHeight // 현재 씬의 scrollHeight
+    const scrollRatio = currentYoffset / scrollHeight; // 현재씬의 현재 스크롤 비율
 
+    switch (currentScene) {
+        case 0:
+            // console.log('1 play');
+            const messageA_opacity_fadeIn = calcValues(values.messageA_opacity_fadeIn, currentYoffset);
+            const messageA_opacity_fadeOut = calcValues(values.messageA_opacity_fadeOut, currentYoffset);
+            const messageA_translateY_fadeIn = calcValues(values.messageA_translateY_fadeIn, currentYoffset);
+            const messageA_translateY_fadeOut = calcValues(values.messageA_translateY_fadeOut, currentYoffset);
+
+            if (scrollRatio <= 0.22) {
+                //in
+                objs.messageA.style.opacity = messageA_opacity_fadeIn;
+                objs.messageA.style.transform = `translateY(${messageA_translateY_fadeIn}%)`;
+            } else {
+                //out
+                objs.messageA.style.opacity = messageA_opacity_fadeOut;
+                objs.messageA.style.transform = `translateY(${messageA_translateY_fadeOut}%)`;
+            }
+
+            break;
+    }
+}
