@@ -1,3 +1,8 @@
+:root {
+    --black: #1D1D21;
+    --gray: #343438;
+}
+
 .scroll-section {
     position: relative;
     padding-top: 40vh;
@@ -13,6 +18,7 @@
 }
 
 .main-msg {
+    width: 100%;
     display: flex;
     top: 35vh;
     justify-content: center;
@@ -60,9 +66,20 @@
     font-size: 3.5rem;
 }
 
+#scroll-section-2 .b {
+    top: 10%;
+    left: 40%;
+}
+
+#scroll-section-2 .c {
+    top: 15%;
+    left: 45%;
+}
+
 .desc-msg {
     font-weight: bolder;
     width: 50%;
+    opacity: 0;
 }
 
 .pin {
@@ -131,5 +148,12 @@
     }
     .canvas-caption {
         font-size: 1.5rem;
+    }
+    #scroll-section-2 .b {
+        top: 20%;
+        left: 53%;
+    }
+    #scroll-section-2 .c {
+        left: 55%;
     }
 }

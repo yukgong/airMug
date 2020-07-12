@@ -2,7 +2,8 @@
     display: none;
     position: fixed;
     left: 0;
-    width: 100%;
+    /* top: 0; */
+    /* width: 100%; */
 }
 
 #show-scene-0 #scroll-section-0 .sticky-elem,
