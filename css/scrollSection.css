@@ -6,15 +6,18 @@
 .scroll-section {
     position: relative;
     padding-top: 40vh;
-    border: solid 1px red;
+    /* border: solid 1px red; */
 }
 
 
 /* section 0 */
 
 #scroll-section-0 h1 {
+    position: relative;
+    z-index: 5;
     font-size: 4rem;
     text-align: center;
+    top: 1rem;
 }
 
 .main-msg {
@@ -69,6 +72,7 @@
 #scroll-section-2 .b {
     top: 10%;
     left: 40%;
+    width: 300px;
 }
 
 #scroll-section-2 .c {
