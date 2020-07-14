@@ -97,7 +97,7 @@ const body = document.querySelector('body');
         }
     ];
 
-    // setLayout(); 
+    // setLayout();
     function setLayout() {
         for (let i = 0; i < sceneInfo.length; i++) {
             // sticky 와 normal 타입의 레이아웃 차이를 준다.
@@ -110,7 +110,7 @@ const body = document.querySelector('body');
             sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
         }
 
-        // 최근 씬 자동으로 잡도록 설정하기 
+        // 최근 씬 자동으로 잡도록 설정하기
         let totalScrollHeight = 0;
         yOffset = window.pageYOffset;
 
@@ -119,7 +119,7 @@ const body = document.querySelector('body');
             // totalScrollHeight의 높이는 각 씬의 높이값을 더한 값이다.
             totalScrollHeight += sceneInfo[i].scrollHeight;
 
-            // totalScrollHeight가 현재 스크롤 높이보다 같거나 커질 때 
+            // totalScrollHeight가 현재 스크롤 높이보다 같거나 커질 때
             // currentScene에 반복문이 실행된 횟수를 대입하고 반복문 종료
             if (totalScrollHeight >= yOffset) {
                 currentScene = i;
@@ -127,7 +127,7 @@ const body = document.querySelector('body');
             }
         }
 
-        // 바디에 currentScene 갱신 
+        // 바디에 currentScene 갱신
         document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
 
@@ -267,7 +267,7 @@ const body = document.querySelector('body');
             enterNewScene = true;
             currentScene++;
 
-            // 바디에 currentScene 갱신 
+            // 바디에 currentScene 갱신
             document.body.setAttribute('id', `show-scene-${currentScene}`);
         }
 
@@ -278,7 +278,7 @@ const body = document.querySelector('body');
 
             currentScene--;
 
-            // 바디에 currentScene 갱신 
+            // 바디에 currentScene 갱신
             document.body.setAttribute('id', `show-scene-${currentScene}`);
         }
 
