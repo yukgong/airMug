@@ -16,9 +16,17 @@ const body = document.querySelector('body');
                 messageA: document.querySelector('#scroll-section-0 .main-msg.a'),
                 messageB: document.querySelector('#scroll-section-0 .main-msg.b'),
                 messageC: document.querySelector('#scroll-section-0 .main-msg.c'),
-                messageD: document.querySelector('#scroll-section-0 .main-msg.d')
+                messageD: document.querySelector('#scroll-section-0 .main-msg.d'),
+                canvas: document.querySelector("#video-canvas-0"),
+                context: document.querySelector("#video-canvas-0").getContext("2d"),
+                videoImages: []
             },
             values: {
+                // 캔버스 요소 값
+                videoImageCount: 300,
+                imageSequence: [0, 299],
+                canvas_opacity: [1, 0, { start: 0.9, end: 1 }],
+
                 // 메세지 요소의 투명도     //애니메이션이 시작되고 끝나는 구간 -> 씬의 전체 높이를 1로 봤을때, 해당 비율이라는 뜻.
                 messageA_opacity_fadeIn: [0, 1, { start: 0.1, end: 0.2 }],
                 messageB_opacity_fadeIn: [0, 1, { start: 0.3, end: 0.4 }],
@@ -60,29 +68,38 @@ const body = document.querySelector('body');
                 messageA: document.querySelector('#scroll-section-2 .a'),
                 messageB: document.querySelector('#scroll-section-2 .b'),
                 messageC: document.querySelector('#scroll-section-2 .c'),
-                // pinB: document.querySelector("#scroll-section-2 .b .pin"),
-                // pinC: document.querySelector("#scroll-section-2 .c .pin"),
+                pinB: document.querySelector("#scroll-section-2 .b .pin"),
+                pinC: document.querySelector("#scroll-section-2 .c .pin"),
+                canvas: document.querySelector("#video-canvas-2"),
+                context: document.querySelector("#video-canvas-2").getContext("2d"),
+                videoImages: []
             },
             values: {
-                messageA_opacity_fadeIn: [0, 1, { start: 0.15, end: 0.2 }],
-                messageB_opacity_fadeIn: [0, 1, { start: 0.5, end: 0.55 }],
-                messageC_opacity_fadeIn: [0, 1, { start: 0.72, end: 0.77 }],
-                messageA_opacity_fadeOut: [1, 0, { start: 0.3, end: 0.35 }],
-                messageB_opacity_fadeOut: [1, 0, { start: 0.58, end: 0.63 }],
-                messageC_opacity_fadeOut: [1, 0, { start: 0.85, end: 0.9 }],
-                messageA_translateY_fadeIn: [20, 0, { start: 0.15, end: 0.2 }],
-                messageB_translateY_fadeIn: [20, 0, { start: 0.5, end: 0.55 }],
-                messageC_translateY_fadeIn: [20, 0, { start: 0.72, end: 0.77 }],
-                messageA_translateY_fadeOut: [0, -20, { start: 0.3, end: 0.35 }],
-                messageB_translateY_fadeOut: [0, -20, { start: 0.58, end: 0.63 }],
-                messageC_translateY_fadeOut: [0, -20, { start: 0.85, end: 0.9 }],
+                // 캔버스 요소 값
+                videoImageCount: 960,
+                imageSequence: [0, 959],
+                canvas_opacity_fadeIn: [0, 1, { start: 0, end: 0.1 }],
+                canvas_opacity_fadeOut: [1, 0, { start: 0.95, end: 1 }],
 
-                // pinB_scaleY: [0.5, 1, { start: 0.5, end: 0.55 }],
-                // pinC_scaleY: [0.5, 1, { start: 0.72, end: 0.77 }],
-                // pinB_opacity_fadeIn: [0, 1, { start: 0.5, end: 0.55 }],
-                // pinC_opacity_fadeIn: [0, 1, { start: 0.72, end: 0.77 }],
-                // pinB_opacity_fadeOut: [1, 0, { start: 0.58, end: 0.63 }],
-                // pinC_opacity_fadeOut: [1, 0, { start: 0.85, end: 0.9 }],
+                messageA_opacity_fadeIn: [0, 1, { start: 0.15, end: 0.2 }],
+                messageB_opacity_fadeIn: [0, 1, { start: 0.6, end: 0.65 }],
+                messageC_opacity_fadeIn: [0, 1, { start: 0.87, end: 0.92 }],
+
+                messageA_opacity_fadeOut: [1, 0, { start: 0.4, end: 0.45 }],
+                messageB_opacity_fadeOut: [1, 0, { start: 0.68, end: 0.73 }],
+                messageC_opacity_fadeOut: [1, 0, { start: 0.95, end: 1 }],
+
+                messageA_translateY_fadeIn: [20, 0, { start: 0.15, end: 0.2 }],
+                messageB_translateY_fadeIn: [20, 0, { start: 0.6, end: 0.65 }],
+                messageC_translateY_fadeIn: [20, 0, { start: 0.87, end: 0.92 }],
+
+                messageA_translateY_fadeOut: [0, -20, { start: 0.4, end: 0.45 }],
+                messageB_translateY_fadeOut: [0, -20, { start: 0.68, end: 0.73 }],
+                messageC_translateY_fadeOut: [0, -20, { start: 0.95, end: 1 }],
+
+                pinB_scaleY: [0.5, 1, { start: 0.6, end: 0.65 }],
+                pinC_scaleY: [0.5, 1, { start: 0.87, end: 0.92 }],
+
             }
 
         },
@@ -97,7 +114,23 @@ const body = document.querySelector('body');
         }
     ];
 
-    // setLayout();
+    function setCanvasImages() {
+        for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+            let imgElem = new Image();
+            imgElem.src = `../airMug/video/001/IMG_${6726 + i}.JPG`;
+            sceneInfo[0].objs.videoImages.push(imgElem);
+        }
+
+        for (let i = 0; i < sceneInfo[2].values.videoImageCount; i++) {
+            let imgElem2 = new Image();
+            imgElem2.src = `../airMug/video/002/IMG_${7027 + i}.JPG`;
+            sceneInfo[2].objs.videoImages.push(imgElem2);
+        }
+        console.log(sceneInfo[0].objs.videoImages);
+    }
+    setCanvasImages();
+
+    // setLayout(); 
     function setLayout() {
         for (let i = 0; i < sceneInfo.length; i++) {
             // sticky 와 normal 타입의 레이아웃 차이를 준다.
@@ -129,6 +162,11 @@ const body = document.querySelector('body');
 
         // 바디에 currentScene 갱신
         document.body.setAttribute('id', `show-scene-${currentScene}`);
+
+        const heightRation = window.innerHeight / 1080;
+        sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRation})`;
+        sceneInfo[2].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRation})`;
+
     }
 
 
@@ -172,10 +210,13 @@ const body = document.querySelector('body');
         const scrollHeight = sceneInfo[currentScene].scrollHeight // 현재 씬의 scrollHeight
         const scrollRatio = currentYoffset / scrollHeight; // 현재씬의 현재 스크롤 비율
 
-        console.log(scrollRatio);
-        console.log(currentScene);
         switch (currentScene) {
             case 0:
+                // 비디오 캔버스 처리하기 
+                let sequence = Math.round(calcValues(values.imageSequence, currentYoffset));
+                objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+                objs.canvas.style.opacity = calcValues(values.canvas_opacity, currentYoffset);
+
                 if (scrollRatio <= 0.22) {
                     //in
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_fadeIn, currentYoffset);
@@ -203,7 +244,7 @@ const body = document.querySelector('body');
                     objs.messageC.style.opacity = calcValues(values.messageC_opacity_fadeOut, currentYoffset);
                     objs.messageC.style.transform = `translateY(${calcValues(values.messageC_translateY_fadeOut, currentYoffset)}%)`;
                 }
-                if (scrollRatio <= 0.82) {
+                if (scrollRatio <= 0.93) {
                     //in
                     objs.messageD.style.opacity = calcValues(values.messageD_opacity_fadeIn, currentYoffset);
                     objs.messageD.style.transform = `translateY(${calcValues(values.messageD_translateY_fadeIn, currentYoffset)}%)`;
@@ -215,8 +256,13 @@ const body = document.querySelector('body');
                 break;
 
             case 2:
-                if (scrollRatio <= 0.25) {
+                // 비디오 캔버스 처리하기 
+                let sequence2 = Math.round(calcValues(values.imageSequence, currentYoffset));
+                objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
+
+                if (scrollRatio <= 0.32) {
                     //in
+                    objs.canvas.style.opacity = calcValues(values.canvas_opacity_fadeIn, currentYoffset);
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_fadeIn, currentYoffset);
                     objs.messageA.style.transform = `translate3d(0, ${calcValues(values.messageA_translateY_fadeIn, currentYoffset)}%, 0)`;
                 } else {
@@ -224,27 +270,28 @@ const body = document.querySelector('body');
                     objs.messageA.style.opacity = calcValues(values.messageA_opacity_fadeOut, currentYoffset);
                     objs.messageA.style.transform = `translate3d(0, ${calcValues(values.messageA_translateY_fadeOut, currentYoffset)}%, 0)`;
                 }
-                if (scrollRatio <= 0.54) {
+                if (scrollRatio <= 0.67) {
                     //in
                     objs.messageB.style.opacity = calcValues(values.messageB_opacity_fadeIn, currentYoffset);
                     objs.messageB.style.transform = `translate3d(0, ${calcValues(values.messageB_translateY_fadeIn, currentYoffset)}%, 0)`;
-                    // objs.pinB.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
+                    objs.pinB.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
                 } else {
                     //out
                     objs.messageB.style.opacity = calcValues(values.messageB_opacity_fadeOut, currentYoffset);
                     objs.messageB.style.transform = `translate3d(0, ${calcValues(values.messageB_translateY_fadeOut, currentYoffset)}%, 0)`;
-                    // objs.pinB.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
+                    objs.pinB.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
+                    objs.canvas.style.opacity = calcValues(values.canvas_opacity_fadeOut, currentYoffset);
                 }
-                if (scrollRatio <= 0.81) {
+                if (scrollRatio <= 0.93) {
                     //in
                     objs.messageC.style.opacity = calcValues(values.messageC_opacity_fadeIn, currentYoffset);
                     objs.messageC.style.transform = `translate3d(0, ${calcValues(values.messageC_translateY_fadeIn, currentYoffset)}%, 0)`;
-                    // objs.pinC.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
+                    objs.pinC.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
                 } else {
                     //out
                     objs.messageC.style.opacity = calcValues(values.messageC_opacity_fadeOut, currentYoffset);
                     objs.messageC.style.transform = `translate3d(0, ${calcValues(values.messageC_translateY_fadeOut, currentYoffset)}%, 0)`;
-                    // objs.pinC.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
+                    objs.pinC.style.transform = `scaleY(${calcValues(values.pinB_scaleY, currentYoffset)}%)`;
                 }
                 break;
 
@@ -294,6 +341,10 @@ const body = document.querySelector('body');
         scrollLoop();
     });
 
-    window.addEventListener('load', setLayout);
+    window.addEventListener('load', () => {
+        setLayout();
+        //문서가 로드될 때 바로 캔버스에 이미지가 그려지도록 조정
+        sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+    });
     window.addEventListener('resize', setLayout);
 })();
