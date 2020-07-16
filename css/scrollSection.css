@@ -95,6 +95,12 @@
 
 /* section 3 */
 
+#scroll-section-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .mid-msg {
     max-width: 1000px;
     margin: 0 auto;

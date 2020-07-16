@@ -12,11 +12,11 @@ const body = document.querySelector('body');
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0,
             objs: {
-                container: document.querySelector('#scroll-section-0'),
-                messageA: document.querySelector('#scroll-section-0 .main-msg.a'),
-                messageB: document.querySelector('#scroll-section-0 .main-msg.b'),
-                messageC: document.querySelector('#scroll-section-0 .main-msg.c'),
-                messageD: document.querySelector('#scroll-section-0 .main-msg.d'),
+                container: document.querySelector("#scroll-section-0"),
+                messageA: document.querySelector("#scroll-section-0 .main-msg.a"),
+                messageB: document.querySelector("#scroll-section-0 .main-msg.b"),
+                messageC: document.querySelector("#scroll-section-0 .main-msg.c"),
+                messageD: document.querySelector("#scroll-section-0 .main-msg.d"),
                 canvas: document.querySelector("#video-canvas-0"),
                 context: document.querySelector("#video-canvas-0").getContext("2d"),
                 videoImages: []
@@ -64,10 +64,10 @@ const body = document.querySelector('body');
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0,
             objs: {
-                container: document.querySelector('#scroll-section-2'),
-                messageA: document.querySelector('#scroll-section-2 .a'),
-                messageB: document.querySelector('#scroll-section-2 .b'),
-                messageC: document.querySelector('#scroll-section-2 .c'),
+                container: document.querySelector("#scroll-section-2"),
+                messageA: document.querySelector("#scroll-section-2 .a"),
+                messageB: document.querySelector("#scroll-section-2 .b"),
+                messageC: document.querySelector("#scroll-section-2 .c"),
                 pinB: document.querySelector("#scroll-section-2 .b .pin"),
                 pinC: document.querySelector("#scroll-section-2 .c .pin"),
                 canvas: document.querySelector("#video-canvas-2"),
@@ -108,7 +108,19 @@ const body = document.querySelector('body');
             heightNum: 5, // 브라우저 높이의 5배로 scrollHeight 세팅
             scrollHeight: 0,
             objs: {
-                container: document.querySelector('#scroll-section-3'),
+                container: document.querySelector("#scroll-section-3"),
+                canvasCaption: document.querySelector(".canvas"),
+                canvas: document.querySelector(".image-blend-canvas"),
+                context: document.querySelector(".image-blend-canvas").getContext("2d"),
+                imagePath: [
+                    "../airMug/images/blend-image-1.jpg",
+                    "../airMug/images/blend-image-2.jpg"
+                ],
+                images: []
+
+            },
+            values: {
+
             }
 
         }
@@ -126,7 +138,13 @@ const body = document.querySelector('body');
             imgElem2.src = `../airMug/video/002/IMG_${7027 + i}.JPG`;
             sceneInfo[2].objs.videoImages.push(imgElem2);
         }
-        console.log(sceneInfo[0].objs.videoImages);
+        for (let i = 0; i < sceneInfo[3].objs.imagePath.length; i++) {
+            let imgElem3 = new Image();
+            imgElem3.src = sceneInfo[3].objs.imagePath[i];
+            sceneInfo[3].objs.images.push(imgElem3);
+        }
+        // 이미지가 잘 들어 갔는지 확인
+        // console.log(sceneInfo[3].objs.images);
     }
     setCanvasImages();
 
@@ -296,6 +314,24 @@ const body = document.querySelector('body');
                 break;
 
             case 3:
+                // 가로,세로 모두 꽉 차게 하기 위해 세팅(연산 처리 필요)
+                // 화면의 가로와 세로의 비율 구하기
+                const widthRatio = window.innerWidth / objs.canvas.width;
+                const heightRatio = window.innerHeight / objs.canvas.height
+                let canvasScaleRatio;
+                // console.log(widthRatio, heightRatio);
+
+                // 화면 비율에 따라 캔버스의 크기를 조정한다.
+                if (widthRatio <= heightRatio) {
+                    // 넓이가 높이보다 작다면(모바일) 캔버스의 크기를 높이 비율에 맞춘다.
+                    canvasScaleRatio = heightRatio;
+                } else {
+                    // 높이가 넓이보다 작다면(웹) 캔버스의 크기를 넓이 비율에 맞춘다.
+                    canvasScaleRatio = widthRatio;
+                }
+
+                objs.canvas.style.transform = `scale(${canvasScaleRatio})`;
+                objs.context.drawImage(objs.images[0], 0, 0);
 
                 break;
         }
